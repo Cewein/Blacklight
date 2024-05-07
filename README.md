@@ -1,0 +1,2 @@
+# Kerosene
+A spectral renderer
