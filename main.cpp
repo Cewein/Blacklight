@@ -4,9 +4,11 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <vector>
 
 #include "src/window.h"
 #include "src/vulkan/instance.h"
+#include "src/vulkan/extension.h"
 
 int main()
 {
@@ -17,11 +19,8 @@ int main()
 	blacklight::instance instance{};
 	instance.create();
 
-	//check 
-	uint32_t extensionCount = 0;
-	vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
-
-	std::cout << extensionCount << " extensions supported\n";
+	//check the extension availble
+	blacklight::supportedExtensions();
 
 	//main loop
 	while (!glfwWindowShouldClose(win.pointer))
@@ -30,6 +29,7 @@ int main()
 	}
 
 	//Windows clean up
+	instance.clean();
 	win.clean();
 
 	return 0;

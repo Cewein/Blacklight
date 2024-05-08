@@ -1,0 +1,12 @@
+set(
+    BLACKLIGHT_VULKAN_SOURCE
+    ${CMAKE_SOURCE_DIR}/src/vulkan/device.h
+    ${CMAKE_SOURCE_DIR}/src/vulkan/device.cpp
+    ${CMAKE_SOURCE_DIR}/src/vulkan/extension.h
+    ${CMAKE_SOURCE_DIR}/src/vulkan/extension.cpp
+    ${CMAKE_SOURCE_DIR}/src/vulkan/instance.h
+    ${CMAKE_SOURCE_DIR}/src/vulkan/instance.cpp
+    ${CMAKE_SOURCE_DIR}/src/vulkan/validation.h
+    ${CMAKE_SOURCE_DIR}/src/vulkan/validation.cpp
+    PARENT_SCOPE
+)

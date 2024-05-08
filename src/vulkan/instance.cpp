@@ -1,11 +1,19 @@
 #include "instance.h"
+#include "validation.h"
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <stdexcept>
+#include <vector>
 
 void blacklight::instance::create()
 {
+#if !defined(NDEBUG)
+	//if validation enable check if supported
+	if (!validation::checkValidationLayerSupport(validation::validationLayers))
+		throw std::runtime_error("Validation requested but not fine.");
+#endif
+
 	//Set the app information
 	VkApplicationInfo appInfo{};
 	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -28,14 +36,26 @@ void blacklight::instance::create()
 
 	createInfo.enabledExtensionCount = glfwExtensionCount;
 	createInfo.ppEnabledExtensionNames = glfwExtensions;
+
+
+#ifdef NDEBUG
 	createInfo.enabledLayerCount = 0;
+#else
+	createInfo.enabledLayerCount = (uint32_t)(validation::validationLayers.size());
+	createInfo.ppEnabledLayerNames = validation::validationLayers.data();
+#endif
 
 	//create the instance
-	VkResult result = vkCreateInstance(&createInfo, nullptr, &this->pointer);
+	VkResult result = vkCreateInstance(&createInfo, nullptr, &this->pInstance);
 
 	//check if it was successful
 	if (result != VK_SUCCESS)
 	{
 		throw std::runtime_error("Fail to create an instance");
 	}
+}
+
+void blacklight::instance::clean()
+{
+	vkDestroyInstance(this->pInstance, nullptr);
 }

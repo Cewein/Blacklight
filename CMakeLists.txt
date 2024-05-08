@@ -11,11 +11,22 @@ if(POLICY CMP0141)
   cmake_policy(SET CMP0141 NEW)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
-project ("Blacklight")
 
-# Set source files for the executable.
-add_executable(Blacklight "main.cpp" "src/window.h" "src/window.cpp" "src/vulkan/instance.h" "src/vulkan/instance.cpp")
+# Define Core sources list
+add_subdirectory(src)
+add_subdirectory(src/vulkan)
 
+add_executable(${PROJECT_NAME})
+target_sources(
+  ${PROJECT_NAME}
+  PRIVATE
+
+  ${CMAKE_SOURCE_DIR}/main.cpp
+  ${BLACKLIGHT_SOURCE}
+  ${BLACKLIGHT_VULKAN_SOURCE}
+)
+
+#add build property
 set_target_properties(Blacklight PROPERTIES
   CXX_STANDARD 17
   CXX_EXTENSIONS OFF

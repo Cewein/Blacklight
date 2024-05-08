@@ -6,8 +6,9 @@ namespace blacklight
 {
 	struct instance
 	{
-		VkInstance pointer;
+		VkInstance pInstance;
 
 		void create();
+		void clean();
 	};
 }
