@@ -14,7 +14,7 @@ endif()
 project ("Blacklight")
 
 # Set source files for the executable.
-add_executable(Blacklight "main.cpp")
+add_executable(Blacklight "main.cpp" "src/window.h" "src/window.cpp" "src/vulkan/instance.h" "src/vulkan/instance.cpp")
 
 set_target_properties(Blacklight PROPERTIES
   CXX_STANDARD 17
