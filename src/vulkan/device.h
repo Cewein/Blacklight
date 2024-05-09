@@ -4,14 +4,21 @@
 
 namespace blacklight
 { 
-
+	//Get a physical and logical device
 	class device
 	{
 	public:
 		VkDevice pDevice;
 		VkPhysicalDevice pPhysicDevice;
 
-		void create(VkInstance instance);
-		bool isPhysicalDeviceSuitable(VkPhysicalDevice device);
+		//creation
+		void pick(VkInstance instance);
+		void create(VkQueue graphicsQueue);
+
+		//cleaning
+		void clean();
+
+		//Check if the physical device is ok
+		bool isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevice);
 	};
 }

@@ -9,6 +9,7 @@
 #include "src/window.h"
 #include "src/vulkan/instance.h"
 #include "src/vulkan/extension.h"
+#include "src/vulkan/device.h"
 
 int main()
 {
@@ -18,6 +19,10 @@ int main()
 	//create vulkan instance
 	blacklight::instance instance{};
 	instance.create();
+	
+	//pick the physical device
+	blacklight::device device{};
+	device.pick(instance.pInstance);
 
 	//check the extension availble
 	blacklight::supportedExtensions();
@@ -29,6 +34,7 @@ int main()
 	}
 
 	//Windows clean up
+	device.clean();
 	instance.clean();
 	win.clean();
 

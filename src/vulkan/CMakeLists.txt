@@ -8,5 +8,7 @@ set(
     ${CMAKE_SOURCE_DIR}/src/vulkan/instance.cpp
     ${CMAKE_SOURCE_DIR}/src/vulkan/validation.h
     ${CMAKE_SOURCE_DIR}/src/vulkan/validation.cpp
+    ${CMAKE_SOURCE_DIR}/src/vulkan/queue.h
+    ${CMAKE_SOURCE_DIR}/src/vulkan/queue.cpp
     PARENT_SCOPE
 )
