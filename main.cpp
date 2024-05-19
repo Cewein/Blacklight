@@ -10,6 +10,7 @@
 #include "src/vulkan/instance.h"
 #include "src/vulkan/extension.h"
 #include "src/vulkan/device.h"
+#include "src/vulkan/surface.h"
 
 int main()
 {
@@ -19,6 +20,10 @@ int main()
 	//create vulkan instance
 	blacklight::instance instance{};
 	instance.create();
+
+	//create surface
+	blacklight::surface surface{};
+	surface.create(win.pointer, instance.pInstance);
 	
 	//pick the physical device
 	blacklight::device device{};
@@ -33,8 +38,9 @@ int main()
 		glfwPollEvents();
 	}
 
-	//Windows clean up
+	//clean up
 	device.clean();
+	surface.clean(instance.pInstance);
 	instance.clean();
 	win.clean();
 

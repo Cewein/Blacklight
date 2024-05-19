@@ -87,7 +87,7 @@ void blacklight::device::clean()
 	vkDestroyDevice(this->pDevice, nullptr);
 }
 
-bool blacklight::device::isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevice)
+bool blacklight::device::isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevice, QueueFamily & family, VkSurfaceKHR surface)
 {
 	//check if the physical device is a GPU
 	VkPhysicalDeviceProperties physicalDeviceProperties;
@@ -98,8 +98,8 @@ bool blacklight::device::isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevic
 
 	bool isGPU = physicalDeviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;
 
-	//check if the gpu as graphic queue;
-	int queueIndices = queue::findQueueFamilies(physicalDevice);
+	//check if the gpu as suitable graphic queue;
+	family.findQueueFamilies(physicalDevice, surface);
 	
-	return isGPU && (queueIndices >= 0);
+	return isGPU;
 }

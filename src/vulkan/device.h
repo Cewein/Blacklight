@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vulkan/vulkan.h>
+#include "queue.h"
 
 namespace blacklight
 { 
@@ -19,6 +20,6 @@ namespace blacklight
 		void clean();
 
 		//Check if the physical device is ok
-		bool isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevice);
+		bool isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevice, QueueFamily& family, VkSurfaceKHR surface);
 	};
 }

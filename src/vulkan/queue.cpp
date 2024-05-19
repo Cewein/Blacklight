@@ -2,11 +2,10 @@
 
 #include <vulkan/vulkan.h>
 #include <vector>
+#include <stdexcept>
 
-uint32_t blacklight::queue::findQueueFamilies(VkPhysicalDevice physicalDevice)
+void blacklight::QueueFamily::findQueueFamilies(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
 {
-	int queueFamilyIndices = -1;
-
 	uint32_t queueFamilyCount = 0;
 	vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, nullptr);
 
@@ -17,9 +16,13 @@ uint32_t blacklight::queue::findQueueFamilies(VkPhysicalDevice physicalDevice)
 	{
 		if (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
 		{
-			queueFamilyIndices = i;
+			this->queueFamilyIndex = queueFamilies[i].queueFlags;
+
+			VkBool32 presentSupport = false;
+			vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, this->queueFamilyIndex, surface, &presentSupport);
 		}
 	}
 
-	return queueFamilyIndices;
+
+	throw std::runtime_error("Failed to find a suitable queue family");
 }

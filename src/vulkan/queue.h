@@ -4,14 +4,23 @@
 
 namespace blacklight
 {
+	struct QueueFamily
+	{
+		// Index of the queue family that this queue belongs to
+		uint32_t queueFamilyIndex;
+
+		// Index of the queue family that supports presenting (displaying images to the screen)
+		uint32_t queueFamilyPresent;
+
+		void findQueueFamilies(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
+	};
+
 	class queue
 	{
 	public:
 
 		VkQueue pointer;
-		uint32_t queueFamilyIndices;
 
-
-		static uint32_t findQueueFamilies(VkPhysicalDevice physicalDevice);
+		QueueFamily family;
 	};
 }

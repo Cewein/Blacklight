@@ -10,5 +10,7 @@ set(
     ${CMAKE_SOURCE_DIR}/src/vulkan/validation.cpp
     ${CMAKE_SOURCE_DIR}/src/vulkan/queue.h
     ${CMAKE_SOURCE_DIR}/src/vulkan/queue.cpp
+    ${CMAKE_SOURCE_DIR}/src/vulkan/surface.h
+    ${CMAKE_SOURCE_DIR}/src/vulkan/surface.cpp
     PARENT_SCOPE
 )
