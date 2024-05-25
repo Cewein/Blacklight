@@ -7,7 +7,7 @@ namespace blacklight
 	struct QueueFamily
 	{
 		// Index of the queue family that this queue belongs to
-		uint32_t queueFamilyIndex;
+		uint32_t queueFamilyGraphics;
 
 		// Index of the queue family that supports presenting (displaying images to the screen)
 		uint32_t queueFamilyPresent;
@@ -22,5 +22,7 @@ namespace blacklight
 		VkQueue pointer;
 
 		QueueFamily family;
+
+		void clean();
 	};
 }

@@ -16,13 +16,26 @@ void blacklight::QueueFamily::findQueueFamilies(VkPhysicalDevice physicalDevice,
 	{
 		if (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
 		{
-			this->queueFamilyIndex = queueFamilies[i].queueFlags;
+			this->queueFamilyGraphics = i;
 
 			VkBool32 presentSupport = false;
-			vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, this->queueFamilyIndex, surface, &presentSupport);
+			vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, this->queueFamilyGraphics, surface, &presentSupport);
+
+			if (presentSupport) {
+				this->queueFamilyPresent = i;
+			}
+			else
+			{
+				break;
+			}
 		}
 	}
 
 
 	throw std::runtime_error("Failed to find a suitable queue family");
+}
+
+void blacklight::queue::clean()
+{
+	//todo ?
 }

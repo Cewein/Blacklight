@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-void blacklight::device::pick(VkInstance instance)
+void blacklight::device::pickPhysicalDevice(VkInstance instance)
 {
 	this->pPhysicDevice = VK_NULL_HANDLE;
 	
@@ -35,30 +35,41 @@ void blacklight::device::pick(VkInstance instance)
 
 }
 
-void blacklight::device::create(VkQueue graphicsQueue)
+void blacklight::device::createLogicalDevice(VkQueue graphicsQueue, VkQueue presentQueue, VkSurfaceKHR surface)
 {
-	int queueIndices = queue::findQueueFamilies(this->pPhysicDevice);
+	QueueFamily queueFamily = { 0, 0 };
 
-	if (queueIndices < 0)
+	queueFamily.findQueueFamilies(this->pPhysicDevice, surface);
+
+	if (queueFamily.queueFamilyGraphics < 0 && queueFamily.queueFamilyPresent)
 		throw std::runtime_error("did not find a suitable graphic queue.");
 
-	//get the info for create the deive and the queue
-	VkDeviceQueueCreateInfo queueCreateInfo{};
-
-	queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-	queueCreateInfo.queueFamilyIndex = queueIndices;
-	queueCreateInfo.queueCount = 1;
-
+	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 	float queuePriority = 1.0f;
-	queueCreateInfo.pQueuePriorities = &queuePriority;
+
+	//get the info for create the device and the queue
+	VkDeviceQueueCreateInfo queueCreateInfoGraphics{};
+	queueCreateInfoGraphics.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+	queueCreateInfoGraphics.queueFamilyIndex = queueFamily.queueFamilyGraphics;
+	queueCreateInfoGraphics.queueCount = 1;
+	queueCreateInfoGraphics.pQueuePriorities = &queuePriority;
+	queueCreateInfos.push_back(queueCreateInfoGraphics);
+
+	//get the info for the presentaiton queue family (display image on screen)
+	VkDeviceQueueCreateInfo queueCreateInfoPresentation{};
+	queueCreateInfoPresentation.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+	queueCreateInfoPresentation.queueFamilyIndex = queueFamily.queueFamilyPresent;
+	queueCreateInfoPresentation.queueCount = 1;
+	queueCreateInfoPresentation.pQueuePriorities = &queuePriority;
 
 	VkPhysicalDeviceFeatures physicaldeviceFeatures{};
-	
+	queueCreateInfos.push_back(queueCreateInfoPresentation);
+
 	//create the device
 	VkDeviceCreateInfo createInfo{};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-	createInfo.pQueueCreateInfos = &queueCreateInfo;
-	createInfo.queueCreateInfoCount = 1;
+	createInfo.pQueueCreateInfos = queueCreateInfos.data();
+	createInfo.queueCreateInfoCount = (uint32_t)queueCreateInfos.size();
 	createInfo.pEnabledFeatures = &physicaldeviceFeatures;
 
 	createInfo.enabledExtensionCount = 0;
@@ -78,7 +89,8 @@ void blacklight::device::create(VkQueue graphicsQueue)
 	}
 
 	//get the queue handle for a specific device
-	vkGetDeviceQueue(this->pDevice, queueIndices, 0, &graphicsQueue);
+	vkGetDeviceQueue(this->pDevice, queueFamily.queueFamilyGraphics, 0, &graphicsQueue);
+	vkGetDeviceQueue(this->pDevice, queueFamily.queueFamilyPresent, 0, &presentQueue);
 
 }
 

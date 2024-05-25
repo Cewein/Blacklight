@@ -46,7 +46,7 @@ void blacklight::instance::create()
 #endif
 
 	//create the instance
-	VkResult result = vkCreateInstance(&createInfo, nullptr, &this->pInstance);
+	VkResult result = vkCreateInstance(&createInfo, nullptr, &this->pointer);
 
 	//check if it was successful
 	if (result != VK_SUCCESS)
@@ -57,5 +57,5 @@ void blacklight::instance::create()
 
 void blacklight::instance::clean()
 {
-	vkDestroyInstance(this->pInstance, nullptr);
+	vkDestroyInstance(this->pointer, nullptr);
 }

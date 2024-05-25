@@ -13,8 +13,8 @@ namespace blacklight
 		VkPhysicalDevice pPhysicDevice;
 
 		//creation
-		void pick(VkInstance instance);
-		void create(VkQueue graphicsQueue);
+		void pickPhysicalDevice(VkInstance instance);
+		void createLogicalDevice(VkQueue graphicsQueue, VkQueue presentQueue, VkSurfaceKHR surface);
 
 		//cleaning
 		void clean();

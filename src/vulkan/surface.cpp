@@ -9,7 +9,7 @@
 
 void blacklight::surface::create(GLFWwindow* window, VkInstance instnace)
 {
-	if (glfwCreateWindowSurface(instnace, window, NULL, &this->vkSurface) != VK_SUCCESS)
+	if (glfwCreateWindowSurface(instnace, window, NULL, &this->pointer) != VK_SUCCESS)
 	{
 		throw std::runtime_error("GLFW did not create a surface");
 	}
@@ -17,5 +17,5 @@ void blacklight::surface::create(GLFWwindow* window, VkInstance instnace)
 
 void blacklight::surface::clean(VkInstance instance)
 {
-	vkDestroySurfaceKHR(instance, this->vkSurface, nullptr);
+	vkDestroySurfaceKHR(instance, this->pointer, nullptr);
 }

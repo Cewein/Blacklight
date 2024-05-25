@@ -23,11 +23,17 @@ int main()
 
 	//create surface
 	blacklight::surface surface{};
-	surface.create(win.pointer, instance.pInstance);
+	surface.create(win.pointer, instance.pointer);
 	
 	//pick the physical device
 	blacklight::device device{};
-	device.pick(instance.pInstance);
+	device.pickPhysicalDevice(instance.pointer);
+
+	//setup queue for both graphics and presentation
+	blacklight::queue graphics{};
+	blacklight::queue presentation{};
+
+	device.createLogicalDevice(graphics.pointer, presentation.pointer, surface.pointer);
 
 	//check the extension availble
 	blacklight::supportedExtensions();
@@ -39,8 +45,9 @@ int main()
 	}
 
 	//clean up
+
 	device.clean();
-	surface.clean(instance.pInstance);
+	surface.clean(instance.pointer);
 	instance.clean();
 	win.clean();
 
