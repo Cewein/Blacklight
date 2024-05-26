@@ -1,5 +1,6 @@
 #include "device.h"
 #include "queue.h"
+#include "validation.h"
 
 #include <vulkan/vulkan.h>
 #include <stdexcept>
@@ -35,15 +36,14 @@ void blacklight::device::pickPhysicalDevice(VkInstance instance)
 
 }
 
-void blacklight::device::createLogicalDevice(VkQueue graphicsQueue, VkQueue presentQueue, VkSurfaceKHR surface)
+blacklight::QueueFamily blacklight::device::createLogicalDevice(VkQueue * graphicsQueue, VkQueue * presentQueue, VkSurfaceKHR surface)
 {
 	QueueFamily queueFamily = { 0, 0 };
 
+	//check if we can find a family, if not throw (see function)
 	queueFamily.findQueueFamilies(this->pPhysicDevice, surface);
 
-	if (queueFamily.queueFamilyGraphics < 0 && queueFamily.queueFamilyPresent)
-		throw std::runtime_error("did not find a suitable graphic queue.");
-
+	//we can have multiple families, so vector of queue creation info
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 	float queuePriority = 1.0f;
 
@@ -61,11 +61,11 @@ void blacklight::device::createLogicalDevice(VkQueue graphicsQueue, VkQueue pres
 	queueCreateInfoPresentation.queueFamilyIndex = queueFamily.queueFamilyPresent;
 	queueCreateInfoPresentation.queueCount = 1;
 	queueCreateInfoPresentation.pQueuePriorities = &queuePriority;
-
-	VkPhysicalDeviceFeatures physicaldeviceFeatures{};
 	queueCreateInfos.push_back(queueCreateInfoPresentation);
 
-	//create the device
+
+	//create the logical device
+	VkPhysicalDeviceFeatures physicaldeviceFeatures{};
 	VkDeviceCreateInfo createInfo{};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 	createInfo.pQueueCreateInfos = queueCreateInfos.data();
@@ -83,15 +83,16 @@ void blacklight::device::createLogicalDevice(VkQueue graphicsQueue, VkQueue pres
 	//create the instance
 	VkResult result = vkCreateDevice(this->pPhysicDevice,&createInfo, nullptr,&this->pDevice);
 
-	if (result == VK_SUCCESS)
+	if (result != VK_SUCCESS)
 	{
 		throw std::runtime_error("Failed to create logical device");
 	}
 
 	//get the queue handle for a specific device
-	vkGetDeviceQueue(this->pDevice, queueFamily.queueFamilyGraphics, 0, &graphicsQueue);
-	vkGetDeviceQueue(this->pDevice, queueFamily.queueFamilyPresent, 0, &presentQueue);
+	vkGetDeviceQueue(this->pDevice, queueFamily.queueFamilyGraphics, 0, graphicsQueue);
+	vkGetDeviceQueue(this->pDevice, queueFamily.queueFamilyPresent, 0, presentQueue);
 
+	return queueFamily;
 }
 
 void blacklight::device::clean()
@@ -99,7 +100,7 @@ void blacklight::device::clean()
 	vkDestroyDevice(this->pDevice, nullptr);
 }
 
-bool blacklight::device::isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevice, QueueFamily & family, VkSurfaceKHR surface)
+bool blacklight::device::isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevice)
 {
 	//check if the physical device is a GPU
 	VkPhysicalDeviceProperties physicalDeviceProperties;
@@ -109,9 +110,6 @@ bool blacklight::device::isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevic
 	vkGetPhysicalDeviceFeatures(physicalDevice, &physicalDeviceFeatures);
 
 	bool isGPU = physicalDeviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;
-
-	//check if the gpu as suitable graphic queue;
-	family.findQueueFamilies(physicalDevice, surface);
 	
 	return isGPU;
 }

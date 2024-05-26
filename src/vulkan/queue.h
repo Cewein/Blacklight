@@ -19,9 +19,7 @@ namespace blacklight
 	{
 	public:
 
-		VkQueue pointer;
-
-		QueueFamily family;
+		VkQueue pointer = VK_NULL_HANDLE;
 
 		void clean();
 	};

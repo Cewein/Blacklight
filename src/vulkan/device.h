@@ -9,17 +9,17 @@ namespace blacklight
 	class device
 	{
 	public:
-		VkDevice pDevice;
-		VkPhysicalDevice pPhysicDevice;
+		VkDevice pDevice = VK_NULL_HANDLE;
+		VkPhysicalDevice pPhysicDevice = VK_NULL_HANDLE;
 
 		//creation
 		void pickPhysicalDevice(VkInstance instance);
-		void createLogicalDevice(VkQueue graphicsQueue, VkQueue presentQueue, VkSurfaceKHR surface);
+		QueueFamily createLogicalDevice(VkQueue * graphicsQueue, VkQueue * presentQueue, VkSurfaceKHR surface);
 
 		//cleaning
 		void clean();
 
 		//Check if the physical device is ok
-		bool isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevice, QueueFamily& family, VkSurfaceKHR surface);
+		bool isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevice);
 	};
 }

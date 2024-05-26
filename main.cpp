@@ -33,7 +33,8 @@ int main()
 	blacklight::queue graphics{};
 	blacklight::queue presentation{};
 
-	device.createLogicalDevice(graphics.pointer, presentation.pointer, surface.pointer);
+	//create logical device and get queue
+	blacklight::QueueFamily queueFamily = device.createLogicalDevice(&graphics.pointer, &presentation.pointer, surface.pointer);
 
 	//check the extension availble
 	blacklight::supportedExtensions();

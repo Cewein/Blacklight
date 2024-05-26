@@ -11,7 +11,7 @@ namespace blacklight
 	{
 	public:
 
-		VkSurfaceKHR pointer;
+		VkSurfaceKHR pointer = VK_NULL_HANDLE;
 
 		void create(GLFWwindow* window, VkInstance instnace);
 		void clean(VkInstance instance);

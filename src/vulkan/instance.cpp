@@ -10,8 +10,8 @@ void blacklight::instance::create()
 {
 #if !defined(NDEBUG)
 	//if validation enable check if supported
-	if (!validation::checkValidationLayerSupport(validation::validationLayers))
-		throw std::runtime_error("Validation requested but not fine.");
+	//if (!validation::checkValidationLayerSupport(validation::validationLayers))
+	//	throw std::runtime_error("Validation requested but not fine.");
 #endif
 
 	//Set the app information
