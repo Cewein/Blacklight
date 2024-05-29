@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vulkan/vulkan.h>
+#include <vector>
+
 #include "queue.h"
 
 namespace blacklight
@@ -9,6 +11,11 @@ namespace blacklight
 	class device
 	{
 	public:
+
+		const std::vector<const char*> deviceExtensions = {
+			VK_KHR_SWAPCHAIN_EXTENSION_NAME
+		};
+
 		VkDevice pDevice = VK_NULL_HANDLE;
 		VkPhysicalDevice pPhysicDevice = VK_NULL_HANDLE;
 
@@ -21,5 +28,6 @@ namespace blacklight
 
 		//Check if the physical device is ok
 		bool isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevice);
+		bool checkForExtensionSupport(VkPhysicalDevice physicalDevice);
 	};
 }

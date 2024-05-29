@@ -113,3 +113,8 @@ bool blacklight::device::isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevic
 	
 	return isGPU;
 }
+
+bool blacklight::device::checkForExtensionSupport(VkPhysicalDevice physicalDevice)
+{
+	return false;
+}
