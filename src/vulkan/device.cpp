@@ -5,6 +5,7 @@
 #include <vulkan/vulkan.h>
 #include <stdexcept>
 #include <vector>
+#include <set>
 
 void blacklight::device::pickPhysicalDevice(VkInstance instance)
 {
@@ -110,11 +111,26 @@ bool blacklight::device::isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevic
 	vkGetPhysicalDeviceFeatures(physicalDevice, &physicalDeviceFeatures);
 
 	bool isGPU = physicalDeviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;
+
+	bool extensionSupported = checkForExtensionSupport(physicalDevice);
 	
 	return isGPU;
 }
 
 bool blacklight::device::checkForExtensionSupport(VkPhysicalDevice physicalDevice)
 {
-	return false;
+	uint32_t extensionCount;
+	vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
+
+	std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+	vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
+
+	std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
+
+	for (const VkExtensionProperties& extension : availableExtensions)
+	{
+		requiredExtensions.erase(extension.extensionName);
+	}
+
+	return requiredExtensions.empty();
 }
