@@ -12,5 +12,7 @@ set(
     ${CMAKE_SOURCE_DIR}/src/vulkan/queue.cpp
     ${CMAKE_SOURCE_DIR}/src/vulkan/surface.h
     ${CMAKE_SOURCE_DIR}/src/vulkan/surface.cpp
+    ${CMAKE_SOURCE_DIR}/src/vulkan/swapchain.h
+    ${CMAKE_SOURCE_DIR}/src/vulkan/swapchain.cpp
     PARENT_SCOPE
 )

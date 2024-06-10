@@ -1,4 +1,4 @@
-# CMakeList.txt : CMake project for Ectoplasme, include source and define
+# CMakeList.txt : CMake project for Blacklight, include source and define
 # project specific logic here.
 #
 cmake_minimum_required (VERSION 3.14)

@@ -27,7 +27,7 @@ int main()
 	
 	//pick the physical device
 	blacklight::device device{};
-	device.pickPhysicalDevice(instance.pointer);
+	device.pickPhysicalDevice(instance.pointer, surface.pointer);
 
 	//setup queue for both graphics and presentation
 	blacklight::queue graphics{};

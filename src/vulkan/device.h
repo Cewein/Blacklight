@@ -20,14 +20,14 @@ namespace blacklight
 		VkPhysicalDevice pPhysicDevice = VK_NULL_HANDLE;
 
 		//creation
-		void pickPhysicalDevice(VkInstance instance);
+		void pickPhysicalDevice(VkInstance instance, VkSurfaceKHR surface);
 		QueueFamily createLogicalDevice(VkQueue * graphicsQueue, VkQueue * presentQueue, VkSurfaceKHR surface);
 
 		//cleaning
 		void clean();
 
 		//Check if the physical device is ok
-		bool isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevice);
+		bool isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
 		bool checkForExtensionSupport(VkPhysicalDevice physicalDevice);
 	};
 }

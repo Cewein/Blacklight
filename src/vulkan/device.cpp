@@ -1,13 +1,14 @@
 #include "device.h"
 #include "queue.h"
 #include "validation.h"
+#include "swapchain.h"
 
 #include <vulkan/vulkan.h>
 #include <stdexcept>
 #include <vector>
 #include <set>
 
-void blacklight::device::pickPhysicalDevice(VkInstance instance)
+void blacklight::device::pickPhysicalDevice(VkInstance instance, VkSurfaceKHR surface)
 {
 	this->pPhysicDevice = VK_NULL_HANDLE;
 	
@@ -25,7 +26,7 @@ void blacklight::device::pickPhysicalDevice(VkInstance instance)
 	//select the first availible gpu
 	for (VkPhysicalDevice& physicalDevice : physicalDevices)
 	{
-		if (isPhysicalDeviceSuitable(physicalDevice))
+		if (isPhysicalDeviceSuitable(physicalDevice, surface))
 		{
 			this->pPhysicDevice = physicalDevice;
 			break;
@@ -73,7 +74,8 @@ blacklight::QueueFamily blacklight::device::createLogicalDevice(VkQueue * graphi
 	createInfo.queueCreateInfoCount = (uint32_t)queueCreateInfos.size();
 	createInfo.pEnabledFeatures = &physicaldeviceFeatures;
 
-	createInfo.enabledExtensionCount = 0;
+	createInfo.enabledExtensionCount = (uint32_t)(deviceExtensions.size());
+	createInfo.ppEnabledExtensionNames = deviceExtensions.data();
 
 #ifdef NDEBUG
 	createInfo.enabledLayerCount = 0;
@@ -101,7 +103,7 @@ void blacklight::device::clean()
 	vkDestroyDevice(this->pDevice, nullptr);
 }
 
-bool blacklight::device::isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevice)
+bool blacklight::device::isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
 {
 	//check if the physical device is a GPU
 	VkPhysicalDeviceProperties physicalDeviceProperties;
@@ -113,8 +115,16 @@ bool blacklight::device::isPhysicalDeviceSuitable(VkPhysicalDevice physicalDevic
 	bool isGPU = physicalDeviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;
 
 	bool extensionSupported = checkForExtensionSupport(physicalDevice);
+
+	bool swapChainAdequate = false;
+	if (extensionSupported)
+	{
+		swapchainSupportDetails swapChainSupport = querySwapchainSupport(physicalDevice, surface);
+		swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
+	}
+
 	
-	return isGPU;
+	return isGPU && extensionSupported && swapChainAdequate;
 }
 
 bool blacklight::device::checkForExtensionSupport(VkPhysicalDevice physicalDevice)
@@ -131,6 +141,7 @@ bool blacklight::device::checkForExtensionSupport(VkPhysicalDevice physicalDevic
 	{
 		requiredExtensions.erase(extension.extensionName);
 	}
+
 
 	return requiredExtensions.empty();
 }
