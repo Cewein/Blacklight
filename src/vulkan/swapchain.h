@@ -5,16 +5,39 @@
 
 namespace blacklight
 {
-	struct swapchainSupportDetails
-	{
-		VkSurfaceCapabilitiesKHR capabilities;
-		std::vector<VkSurfaceFormatKHR> formats;
-		std::vector<VkPresentModeKHR> presentModes;
-	};
+    /**
+     * @brief Struct containing details about swapchain support.
+     *
+     * This struct aggregates Vulkan surface capabilities, supported surface formats,
+     * and presentation modes for determining swapchain configuration.
+     */
+    struct swapchainSupportDetails
+    {
+        VkSurfaceCapabilitiesKHR capabilities; // Surface capabilities (e.g., min/max image counts).
+        std::vector<VkSurfaceFormatKHR> formats; // Supported surface formats (color space, pixel format).
+        std::vector<VkPresentModeKHR> presentModes; // Supported presentation modes (e.g., FIFO, immediate).
+    };
 
-	//check if the there is enough support for the swapchain
-	swapchainSupportDetails querySwapchainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
-	
-	//get the different formats for the swapchain
-	VkSurfaceFormatKHR chooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
-} 
+    /**
+     * @brief Queries the swapchain support details for a given physical device and surface.
+     *
+     * This function queries Vulkan for the capabilities, supported formats, and presentation modes
+     * of a swapchain on the specified physical device and surface.
+     *
+     * @param physicalDevice: Vulkan physical device to query.
+     * @param surface: Vulkan surface to query swapchain support for.
+     * @return swapchainSupportDetails: containing capabilities, formats, and presentation modes.
+     */
+    swapchainSupportDetails querySwapchainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface);
+
+    /**
+     * @brief Chooses the best surface format from the available formats.
+     *
+     * This function selects the optimal surface format from the list of available formats
+     * based on criteria such as color space and pixel format preferences.
+     *
+     * @param availableFormats: List of available surface formats to choose from.
+     * @return VkSurfaceFormatKHR: representing the chosen surface format.
+     */
+    VkSurfaceFormatKHR chooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+}

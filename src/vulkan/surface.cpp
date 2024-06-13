@@ -7,15 +7,18 @@
 
 #include <stdexcept>
 
-void blacklight::surface::create(GLFWwindow* window, VkInstance instnace)
+void blacklight::surface::create(GLFWwindow* window, VkInstance instance)
 {
-	if (glfwCreateWindowSurface(instnace, window, NULL, &this->pointer) != VK_SUCCESS)
-	{
-		throw std::runtime_error("GLFW did not create a surface");
-	}
+    // Create a Vulkan surface for the given window using GLFW
+    if (glfwCreateWindowSurface(instance, window, nullptr, &this->pointer) != VK_SUCCESS)
+    {
+        // Throw an error if the surface creation fails
+        throw std::runtime_error("GLFW failed to create a surface");
+    }
 }
 
 void blacklight::surface::clean(VkInstance instance)
 {
-	vkDestroySurfaceKHR(instance, this->pointer, nullptr);
+    // Destroy the Vulkan surface
+    vkDestroySurfaceKHR(instance, this->pointer, nullptr);
 }

@@ -3,21 +3,28 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-blacklight::window::window(int width, int heigh, const char* title)
+blacklight::window::window(int width, int height, const char* title)
 {
-	//Init windows
-	glfwInit();
+    // Initialize GLFW library
+    glfwInit();
 
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    // Set GLFW window hints
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // Specify that GLFW will not create an OpenGL context
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);   // Disable window resizing
 
-	this->pointer = glfwCreateWindow(width, heigh, title, nullptr, nullptr);
-	this->heigh = heigh;
-	this->width = width;
+    // Create GLFW window
+    this->pointer = glfwCreateWindow(width, height, title, nullptr, nullptr);
+
+    // Store window dimensions
+    this->width = width;
+    this->height = height;
 }
 
 void blacklight::window::clean()
 {
-	glfwDestroyWindow(this->pointer);
-	glfwTerminate();
+    // Destroy GLFW window
+    glfwDestroyWindow(this->pointer);
+
+    // Terminate GLFW library
+    glfwTerminate();
 }

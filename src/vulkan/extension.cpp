@@ -6,18 +6,23 @@
 
 void blacklight::supportedExtensions()
 {
-	//check the extension availble
-	uint32_t extensionCount = 0;
-	vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+    // Query the number of available instance extensions
+    uint32_t extensionCount = 0;
+    vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
 
-	std::vector<VkExtensionProperties> extensions(extensionCount);
-	std::cout << extensionCount << " extensions supported" << std::endl;
+    // Allocate a vector to hold the extension properties
+    std::vector<VkExtensionProperties> extensions(extensionCount);
 
-	vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
+    // Print the number of supported extensions
+    std::cout << extensionCount << " extensions supported" << std::endl;
 
-	std::cout << "Available extensions:" << std::endl;
-	for (VkExtensionProperties& extension : extensions)
-	{
-		std::cout << "\t" << extension.extensionName << std::endl;
-	}
+    // Retrieve the properties of all available extensions
+    vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
+
+    // Print the names of all available extensions
+    std::cout << "Available extensions:" << std::endl;
+    for (VkExtensionProperties& extension : extensions)
+    {
+        std::cout << "\t" << extension.extensionName << std::endl;
+    }
 }
