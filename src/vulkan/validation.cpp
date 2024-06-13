@@ -23,7 +23,7 @@ bool blacklight::validation::checkValidationLayerSupport(const std::vector<const
             // Compare the layer names to check for a match
             if (strcmp(layerName, layerProperties.layerName) == 0)
             {
-                // Layer found, mark it as supported
+                // Layer found, mark it as supported and break out of the loop
                 layerFound = true;
                 break;
             }
