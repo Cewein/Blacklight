@@ -40,4 +40,12 @@ namespace blacklight
     /// @return VkSurfaceFormatKHR: representing the chosen surface format.
     /// 
     VkSurfaceFormatKHR chooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+    
+    /// 
+    /// @brief Chooses the best present mode from the possible ones.
+    /// 
+    /// @param availablePresentMode: List of available present modes to choose from.
+    /// @return VkPresentModeKHR: representing the chosen surface format.
+    /// 
+    VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
 }
