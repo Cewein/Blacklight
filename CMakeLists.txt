@@ -54,11 +54,11 @@ ELSE()
 	message(STATUS ${Vulkan_LIBRARY})
 ENDIF()
 
-find_package(OpenUSD REQUIRED HINTS ${USD_PATH} NAMES pxr)
-if (OpenUSD_FOUND)
-    message(STATUS "Find OpenUSD version: ${PXR_VERSION} at ${PXR_INCLUDE_DIRS}")
-	target_include_directories(Blacklight PUBLIC ${PXR_INCLUDE_DIRS})
-endif()
+# find_package(OpenUSD REQUIRED HINTS ${USD_PATH} NAMES pxr)
+# if (OpenUSD_FOUND)
+#     message(STATUS "Find OpenUSD version: ${PXR_VERSION} at ${PXR_INCLUDE_DIRS}")
+# 	target_include_directories(Blacklight PUBLIC ${PXR_INCLUDE_DIRS})
+# endif()
 
 FetchContent_Declare(
   glfw

@@ -1,6 +1,8 @@
-#include "validation.h"
+#include <cstring>
 
 #include <vulkan/vulkan.h>
+
+#include "validation.h"
 
 bool blacklight::validation::checkValidationLayerSupport(const std::vector<const char*> validLayers)
 {
