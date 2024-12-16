@@ -11,6 +11,7 @@
 #include "src/vulkan/extension.h"
 #include "src/vulkan/device.h"
 #include "src/vulkan/surface.h"
+#include "src/vulkan/swapchain.h"
 
 int main()
 {
@@ -39,6 +40,10 @@ int main()
 	//check the extension availble
 	blacklight::supportedExtensions();
 
+	//set swapchain and create it
+	blacklight::swapchain swapchain{};
+	swapchain.createSwapChain(win, device.pPhysicDevice, device.pDevice,surface.pointer);
+
 	//main loop
 	while (!glfwWindowShouldClose(win.pointer))
 	{
@@ -46,7 +51,7 @@ int main()
 	}
 
 	//clean up
-
+	swapchain.clean(device.pDevice);
 	device.clean();
 	surface.clean(instance.pointer);
 	instance.clean();

@@ -3,6 +3,9 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 
+/// blackligth window class
+#include "../window.h"
+
 namespace blacklight
 {
     /// 
@@ -48,4 +51,16 @@ namespace blacklight
     /// @return VkPresentModeKHR: representing the chosen surface format.
     /// 
     VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+
+    VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities, const blacklight::window& win);
+
+    class swapchain
+    {
+    public:
+        VkSwapchainKHR pointer = VK_NULL_HANDLE;
+
+        void createSwapChain(const blacklight::window& win, VkPhysicalDevice physicalDevice, VkDevice device, VkSurfaceKHR surface);
+        void clean(VkDevice device);
+    };
+
 }

@@ -1,4 +1,9 @@
+#include <GLFW/glfw3.h>
+#include <algorithm>
+
 #include "swapchain.h"
+#include "queue.h"
+#include <stdexcept>
 
 blacklight::swapchainSupportDetails blacklight::querySwapchainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
 {
@@ -63,3 +68,77 @@ VkPresentModeKHR blacklight::chooseSwapPresentMode(const std::vector<VkPresentMo
     return VK_PRESENT_MODE_FIFO_KHR;
 }
 
+VkExtent2D blacklight::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities,  const blacklight::window& win)
+{
+    //if not UINT32_MAX is almost mean that current extent is already set
+    if(capabilities.currentExtent.width != UINT32_MAX)
+    {
+        return capabilities.currentExtent;
+    }
+    
+    VkExtent2D actualExtent = 
+    {
+        (uint32_t)win.width,
+        (uint32_t)win.height
+    };
+
+    actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
+    actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
+
+    return actualExtent;
+}
+
+void blacklight::swapchain::createSwapChain(const blacklight::window &win, VkPhysicalDevice physicalDevice, VkDevice device, VkSurfaceKHR surface)
+{
+    swapchainSupportDetails swapChainSupport = querySwapchainSupport(physicalDevice, surface);
+
+    VkSurfaceFormatKHR surfaceFormat = chooseSurfaceFormat(swapChainSupport.formats);
+    VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
+    VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities, win);
+
+    //get the number of image availible in the swapchain
+    uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
+    if(swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount)
+    {
+        imageCount = swapChainSupport.capabilities.maxImageCount;
+    }
+
+    VkSwapchainCreateInfoKHR createInfo{};
+
+    createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    createInfo.surface = surface;
+    createInfo.minImageCount = imageCount;
+    createInfo.imageFormat = surfaceFormat.format;
+    createInfo.imageColorSpace = surfaceFormat.colorSpace;
+    createInfo.imageExtent = extent;
+    createInfo.imageArrayLayers = 1;
+    createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+    QueueFamily family;
+    family.findQueueFamilies(physicalDevice,surface);
+    uint32_t queueFamilyIndices[] = {family.queueFamilyGraphics,family.queueFamilyPresent};
+
+    createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    if(family.queueFamilyGraphics != family.queueFamilyPresent)
+    {
+        createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+        createInfo.queueFamilyIndexCount = 2;
+        createInfo.pQueueFamilyIndices = queueFamilyIndices;
+    }
+
+    createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
+    createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+    createInfo.presentMode = presentMode;
+    createInfo.clipped = VK_TRUE;
+    createInfo.oldSwapchain = VK_NULL_HANDLE;
+
+    if(vkCreateSwapchainKHR(device,&createInfo,nullptr,&this->pointer) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Failed to create swap chain !");
+    }
+}
+
+void blacklight::swapchain::clean(VkDevice device)
+{
+    vkDestroySwapchainKHR(device, this->pointer,nullptr);
+}
