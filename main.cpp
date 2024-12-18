@@ -12,6 +12,7 @@
 #include "src/vulkan/device.h"
 #include "src/vulkan/surface.h"
 #include "src/vulkan/swapchain.h"
+#include "src/vulkan/image.h"
 
 int main()
 {
@@ -42,7 +43,9 @@ int main()
 
 	//set swapchain and create it
 	blacklight::swapchain swapchain{};
-	swapchain.createSwapChain(win, device.pPhysicDevice, device.pDevice,surface.pointer);
+	blacklight::image img{};
+	swapchain.createSwapChain(win,img, device.pPhysicDevice, device.pDevice,surface.pointer);
+	img.createImageView(device.pDevice);
 
 	//main loop
 	while (!glfwWindowShouldClose(win.pointer))
@@ -51,6 +54,7 @@ int main()
 	}
 
 	//clean up
+	img.clear(device.pDevice);
 	swapchain.clean(device.pDevice);
 	device.clean();
 	surface.clean(instance.pointer);

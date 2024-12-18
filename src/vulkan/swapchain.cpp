@@ -1,9 +1,10 @@
 #include <GLFW/glfw3.h>
 #include <algorithm>
-
-#include "swapchain.h"
-#include "queue.h"
 #include <stdexcept>
+
+#include "queue.h"
+#include "swapchain.h"
+#include "image.h"
 
 blacklight::swapchainSupportDetails blacklight::querySwapchainSupport(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
 {
@@ -88,7 +89,7 @@ VkExtent2D blacklight::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabili
     return actualExtent;
 }
 
-void blacklight::swapchain::createSwapChain(const blacklight::window &win, VkPhysicalDevice physicalDevice, VkDevice device, VkSurfaceKHR surface)
+void blacklight::swapchain::createSwapChain(const blacklight::window &win, blacklight::image& img, VkPhysicalDevice physicalDevice, VkDevice device, VkSurfaceKHR surface)
 {
     swapchainSupportDetails swapChainSupport = querySwapchainSupport(physicalDevice, surface);
 
@@ -139,12 +140,13 @@ void blacklight::swapchain::createSwapChain(const blacklight::window &win, VkPhy
         throw std::runtime_error("Failed to create swap chain !");
     }
 
+    //populate the blacklight::image class for later use
     vkGetSwapchainImagesKHR(device, this->pointer, &imageCount, nullptr);
-    this->swapChainImage.resize(imageCount);
-    vkGetSwapchainImagesKHR(device, this->pointer, &imageCount, swapChainImage.data());
+    img.swapChainImages.resize(imageCount);
+    vkGetSwapchainImagesKHR(device, this->pointer, &imageCount, img.swapChainImages.data());
 
-    swapChainImageFormat = surfaceFormat.format;
-    swapChainImageExtent = extent;
+    img.swapChainImageFormat = surfaceFormat.format;
+    img.swapChainImageExtent = extent;
 
 }
 

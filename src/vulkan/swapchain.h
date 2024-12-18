@@ -5,6 +5,7 @@
 
 /// blackligth window class
 #include "../window.h"
+#include "image.h"
 
 namespace blacklight
 {
@@ -57,12 +58,11 @@ namespace blacklight
     class swapchain
     {
     public:
+        //swapchain pointer
         VkSwapchainKHR pointer = VK_NULL_HANDLE;
-        std::vector<VkImage> swapChainImage;
-        VkFormat swapChainImageFormat;
-        VkExtent2D swapChainImageExtent;
 
-        void createSwapChain(const blacklight::window& win, VkPhysicalDevice physicalDevice, VkDevice device, VkSurfaceKHR surface);
+        //creation function
+        void createSwapChain(const blacklight::window& win, blacklight::image& img,  VkPhysicalDevice physicalDevice, VkDevice device, VkSurfaceKHR surface);
         void clean(VkDevice device);
     };
 
