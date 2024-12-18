@@ -58,6 +58,9 @@ namespace blacklight
     {
     public:
         VkSwapchainKHR pointer = VK_NULL_HANDLE;
+        std::vector<VkImage> swapChainImage;
+        VkFormat swapChainImageFormat;
+        VkExtent2D swapChainImageExtent;
 
         void createSwapChain(const blacklight::window& win, VkPhysicalDevice physicalDevice, VkDevice device, VkSurfaceKHR surface);
         void clean(VkDevice device);

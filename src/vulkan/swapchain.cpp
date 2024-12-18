@@ -118,6 +118,7 @@ void blacklight::swapchain::createSwapChain(const blacklight::window &win, VkPhy
     family.findQueueFamilies(physicalDevice,surface);
     uint32_t queueFamilyIndices[] = {family.queueFamilyGraphics,family.queueFamilyPresent};
 
+    //get the sharing mode, see vk doc for more info
     createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
     if(family.queueFamilyGraphics != family.queueFamilyPresent)
     {
@@ -132,10 +133,19 @@ void blacklight::swapchain::createSwapChain(const blacklight::window &win, VkPhy
     createInfo.clipped = VK_TRUE;
     createInfo.oldSwapchain = VK_NULL_HANDLE;
 
+    //validate the creation of the swap chain
     if(vkCreateSwapchainKHR(device,&createInfo,nullptr,&this->pointer) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create swap chain !");
     }
+
+    vkGetSwapchainImagesKHR(device, this->pointer, &imageCount, nullptr);
+    this->swapChainImage.resize(imageCount);
+    vkGetSwapchainImagesKHR(device, this->pointer, &imageCount, swapChainImage.data());
+
+    swapChainImageFormat = surfaceFormat.format;
+    swapChainImageExtent = extent;
+
 }
 
 void blacklight::swapchain::clean(VkDevice device)
