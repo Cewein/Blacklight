@@ -16,5 +16,7 @@ set(
     ${CMAKE_SOURCE_DIR}/src/vulkan/swapchain.cpp
     ${CMAKE_SOURCE_DIR}/src/vulkan/image.h
     ${CMAKE_SOURCE_DIR}/src/vulkan/image.cpp
+    ${CMAKE_SOURCE_DIR}/src/vulkan/shader.h
+    ${CMAKE_SOURCE_DIR}/src/vulkan/shader.cpp
     PARENT_SCOPE
 )

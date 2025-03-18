@@ -24,6 +24,7 @@ target_sources(
   ${CMAKE_SOURCE_DIR}/main.cpp
   ${BLACKLIGHT_SOURCE}
   ${BLACKLIGHT_VULKAN_SOURCE}
+  ${BLACKLIGHT_UTILS_SOURCE}
 )
 
 #add build property

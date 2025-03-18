@@ -4,5 +4,5 @@
 
 namespace blacklight
 {
-    std::vector<char> readShaderFile(const std::string& filename);
+    std::vector<char> readFile(const std::string& filename);
 }
